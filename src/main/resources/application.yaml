@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: zimra-fdms-mock-server-java
