@@ -2,10 +2,12 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.controller;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.annotations.DeviceInfoHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceInfo;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.OperationIdHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.UserSearchCriteria;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Operator;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Order;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.user.*;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.service.UserService;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-
-import java.time.LocalDateTime;
 
 /**
  * All methods are synchronous.<br>
@@ -37,9 +37,11 @@ public class UserController {
 
     public static final String OPERATION_ID = "operationId";
     private final OperationIDCache idCache;
+    private final UserService userService;
 
-    public UserController(OperationIDCache idCache) {
+    public UserController(OperationIDCache idCache, UserService userService) {
         this.idCache = idCache;
+        this.userService = userService;
     }
 
     /**
@@ -61,21 +63,19 @@ public class UserController {
             @Valid @ModelAttribute UserSearchCriteria criteria,
             BindingResult bindingResult){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        OperationIdHeader opIdHeader = createOpIdHeader();
 
         // Check for validation errors on the UserSearchCriteria object
         if (bindingResult.hasErrors()) {
-            // Handle errors – for example, return a 400 Bad Request with error details
-            return ResponseEntity.badRequest().headers(responseHeaders).body(bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().headers(opIdHeader.headers()).body(bindingResult.getAllErrors());
         }
 
-        GetUsersResponse response = GetUsersResponse.builder()
-                .operatorID(operationID)
-                .build();
+        GetUsersResponse response = userService.getUsersList(deviceID, deviceInfo, offset, limit, criteria);
+        response.setOperatorID(opIdHeader.operationID());
 
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -89,15 +89,14 @@ public class UserController {
     public ResponseEntity<SendSecurityCodeToTaxpayerResponse> sendSecurityCodeToTaxpayer(@PathVariable Integer deviceID,
                                                         @DeviceInfoHeader DeviceInfo deviceInfo,
                                                         @Valid @RequestBody SendSecurityCodeToTaxpayerRequest request){
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        SendSecurityCodeToTaxpayerResponse response = SendSecurityCodeToTaxpayerResponse.builder()
-                .operationID(operationID)
-                .build();
+        SendSecurityCodeToTaxpayerResponse response = userService.sendSecurityCodeToTaxpayer(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -111,17 +110,15 @@ public class UserController {
     public ResponseEntity<CreateUserResponse> createUser(
             @PathVariable Integer deviceID,
             @DeviceInfoHeader DeviceInfo deviceInfo,
-            @Valid @RequestBody CreateUserRequest request ){
+            @Valid @RequestBody CreateUserRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        CreateUserResponse response = userService.createUser(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        CreateUserResponse response = CreateUserResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -137,15 +134,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody LoginRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        LoginResponse response = userService.login(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        LoginResponse response = LoginResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -163,15 +158,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody SendSecurityCodeToUserEmailRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        SendSecurityCodeToUserEmailResponse response = userService.sendSecurityCodeToUserEmail(deviceID, token, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        SendSecurityCodeToUserEmailResponse response = SendSecurityCodeToUserEmailResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -189,15 +182,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody SendSecurityCodeToUserPhoneRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        SendSecurityCodeToUserPhoneResponse response = userService.sendSecurityCodeToUserPhone(deviceID, token, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        SendSecurityCodeToUserPhoneResponse response = SendSecurityCodeToUserPhoneResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -213,16 +204,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody ConfirmUserRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        ConfirmUserResponse response = userService.confirmUser(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        ConfirmUserResponse response = ConfirmUserResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
-
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -240,15 +228,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody ChangePasswordRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        ChangePasswordResponse response = userService.changePassword(deviceID, token, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        ChangePasswordResponse response = ChangePasswordResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
 
     }
 
@@ -265,15 +251,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody ResetPasswordRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        ResetPasswordResponse response = userService.resetPassword(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        ResetPasswordResponse response = ResetPasswordResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -291,15 +275,11 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody ConfirmContactRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        ConfirmContactResponse response = userService.confirmContact(deviceID, token, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        ConfirmContactResponse response = ConfirmContactResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(response);
     }
 
     /**
@@ -317,15 +297,13 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody UpdateUserRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        UpdateUserResponse response = userService.update(deviceID, token, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        UpdateUserResponse response = UpdateUserResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -341,19 +319,14 @@ public class UserController {
             @DeviceInfoHeader DeviceInfo deviceInfo,
             @Valid @RequestBody ConfirmPasswordResetRequest request){
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        ConfirmPasswordResponse response = userService.confirmPasswordReset(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        ConfirmPasswordResponse response = ConfirmPasswordResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
-
-
-
 
 
 
@@ -378,6 +351,18 @@ public class UserController {
                 criteria.setOperator(Operator.valueOf(operator));
             }
         }
+    }
+
+    private OperationIdHeader createOpIdHeader() {
+        String operationID = idCache.getOperationID();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(OPERATION_ID,operationID);
+
+        return OperationIdHeader.builder()
+                .operationID(operationID)
+                .headers(headers)
+                .build();
+
     }
 }
 
