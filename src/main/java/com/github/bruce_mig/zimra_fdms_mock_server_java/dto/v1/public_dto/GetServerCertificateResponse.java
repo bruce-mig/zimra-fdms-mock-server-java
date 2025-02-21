@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,7 +25,7 @@ public class GetServerCertificateResponse {
     private String operationID;
 
     /** Fiscalisation Backend certificate chain (according x.509 standard) to validate Fiscalisation Backend signatures. */
-    private String certificate;
+    private List<String> certificate;
 
     /**
      * Date till when Fiscalisation Backend signing certificate is valid (despite that in the certificate parameter all the certificate chain is returned,
