@@ -2,7 +2,9 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.controller;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.annotations.DeviceInfoHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceInfo;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.OperationIdHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.public_dto.*;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.service.PublicService;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +25,11 @@ public class PublicController {
 
     public static final String OPERATION_ID = "operationId";
     private final OperationIDCache idCache;
+    private final PublicService publicService;
 
-    public PublicController(OperationIDCache idCache) {
+    public PublicController(OperationIDCache idCache, PublicService publicService) {
         this.idCache = idCache;
+        this.publicService = publicService;
     }
 
     /**
@@ -33,29 +37,27 @@ public class PublicController {
      * @param deviceID
      * @param deviceInfo
      * @param registerDeviceRequest
-     * @return
+     * @return RegisterDeviceResponse
      */
     @PostMapping("{deviceID}/RegisterDevice")
     public ResponseEntity<?> registerDevice(@PathVariable Integer deviceID,
                                             @DeviceInfoHeader DeviceInfo deviceInfo,
                                             @Valid @RequestBody RegisterDeviceRequest registerDeviceRequest) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+
+        OperationIdHeader opIdHeader = createOpIdHeader();
 
         if (deviceInfo.deviceModelName().isBlank() || deviceInfo.deviceModelVersion().isBlank()) {
-            return ResponseEntity.badRequest().headers(responseHeaders).body("Missing required header(s): DeviceModelName or DeviceModelVersion");
+            return ResponseEntity.badRequest()
+                    .headers(opIdHeader.headers())
+                    .body("Missing required header(s): DeviceModelName or DeviceModelVersion");
         }
 
-        log.debug("DeviceModelName: '{}' | DeviceModelVersion: '{}'", deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
+        RegisterDeviceResponse registerDeviceResponse = publicService.registerDevice(deviceID, deviceInfo, registerDeviceRequest);
+        registerDeviceResponse.setOperationID(opIdHeader.operationID());
 
-        RegisterDeviceResponse registerDeviceResponse = RegisterDeviceResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(registerDeviceResponse);
-
-
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(registerDeviceResponse);
     }
 
     /**
@@ -71,15 +73,13 @@ public class PublicController {
     @GetMapping("/GetServerCertificate")
     public ResponseEntity<GetServerCertificateResponse> getServerCertificate(@RequestParam("thumbprint") String thumbprint) {
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        GetServerCertificateResponse response = publicService.getServerCertificate(thumbprint);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        GetServerCertificateResponse serverCertificateResponse = GetServerCertificateResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(serverCertificateResponse);
+        return ResponseEntity.ok()
+                .headers(opIdHeader.headers())
+                .body(response);
     }
 
     /**
@@ -93,14 +93,23 @@ public class PublicController {
     public ResponseEntity<VerifyTaxpayerInformationResponse> verifyTaxpayerInformation(@PathVariable Integer deviceID,
                                                        @Valid @RequestBody VerifyTaxpayerInformationRequest request) {
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        VerifyTaxpayerInformationResponse response = publicService.verifyTaxpayerInformation(deviceID, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        response.setOperationID(opIdHeader.operationID());
 
-        VerifyTaxpayerInformationResponse response = VerifyTaxpayerInformationResponse.builder()
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(response);
+    }
+
+    // Helper method to create headers with operationID
+    private OperationIdHeader createOpIdHeader() {
+        String operationID = idCache.getOperationID();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(OPERATION_ID,operationID);
+
+        return OperationIdHeader.builder()
                 .operationID(operationID)
+                .headers(headers)
                 .build();
 
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
     }
 }
