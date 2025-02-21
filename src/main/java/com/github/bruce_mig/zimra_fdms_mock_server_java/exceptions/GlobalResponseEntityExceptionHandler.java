@@ -40,7 +40,7 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
 
         ProblemDetails errorDetails = ProblemDetails.builder()
                 .type("https://httpstatuses.io/500")
-                .title("Device Certificate Expired Exception")
+                .title("Server encountered temporary issues")
                 .status(500)
                 .detail(request.getDescription(false))
                 .build();
