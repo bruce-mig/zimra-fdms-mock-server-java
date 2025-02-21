@@ -2,7 +2,7 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.controller;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.annotations.DeviceInfoHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceInfo;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.SearchCriteria;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceSearchCriteria;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.*;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
 import jakarta.validation.Valid;
@@ -257,20 +257,18 @@ public class DeviceController {
           @DeviceInfoHeader DeviceInfo deviceInfo,
           @RequestParam("Offset") Integer offset,
           @RequestParam("Limit") Integer limit,
-          @Valid @ModelAttribute SearchCriteria criteria,
+          @Valid @ModelAttribute DeviceSearchCriteria criteria,
           BindingResult bindingResult) {
 
         String operationID = idCache.getOperationID();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(OPERATION_ID,operationID);
 
-        // Check for validation errors on the SearchCriteria object
+        // Check for validation errors on the DeviceSearchCriteria object
         if (bindingResult.hasErrors()) {
             // Handle errors – for example, return a 400 Bad Request with error details
             return ResponseEntity.badRequest().headers(responseHeaders).body(bindingResult.getAllErrors());
         }
-
-
 
         SubmittedFileHeaderDtoListResponse listResponse = SubmittedFileHeaderDtoListResponse.builder()
                 .build();
@@ -282,12 +280,12 @@ public class DeviceController {
         return ResponseEntity.ok().headers(responseHeaders).body(listResponse);
     }
 
-    /**  The @InitBinder method customizes the binding for SearchCriteria. */
+    /**  The @InitBinder method customizes the binding for DeviceSearchCriteria. */
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         Object target = binder.getTarget();
-        if (target instanceof SearchCriteria) {
-            SearchCriteria criteria = (SearchCriteria) target;
+        if (target instanceof DeviceSearchCriteria) {
+            DeviceSearchCriteria criteria = (DeviceSearchCriteria) target;
 
             String opId = request.getParameter("OperationID");
             if (opId != null) {
@@ -303,9 +301,9 @@ public class DeviceController {
                 criteria.setFileUploadTill(LocalDateTime.parse(fileUploadedTill));
             }
 
-            String sort = request.getParameter("Sort");
+            String sort = request.getParameter("DeviceSort");
             if (sort != null) {
-                criteria.setSort(Sort.valueOf(sort));
+                criteria.setSort(DeviceSort.valueOf(sort));
             }
 
             String order = request.getParameter("Order");
