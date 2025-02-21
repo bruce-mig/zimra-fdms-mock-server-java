@@ -11,6 +11,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Objects;
+
 public class DeviceInfoArgumentResolver implements HandlerMethodArgumentResolver {
 
     public static final String DEVICE_MODEL_NAME = "DeviceModelName";
@@ -23,8 +25,10 @@ public class DeviceInfoArgumentResolver implements HandlerMethodArgumentResolver
     }
 
     @Override
-    public Object resolveArgument(@NonNull MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(@NonNull MethodParameter parameter,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
         if (request == null) {
@@ -34,7 +38,14 @@ public class DeviceInfoArgumentResolver implements HandlerMethodArgumentResolver
         String deviceModelName = request.getHeader(DEVICE_MODEL_NAME);
         String deviceModelVersion = request.getHeader(DEVICE_MODEL_VERSION);
 
-        if (deviceModelName == null || deviceModelVersion == null) {
+        DeviceInfoHeader annotation = Objects.requireNonNull(
+                parameter.getParameterAnnotation(DeviceInfoHeader.class),
+                "DeviceInfoHeader annotation is missing"
+        );
+
+        boolean required = annotation.required();
+
+        if (required && (deviceModelName == null || deviceModelVersion == null)) {
             throw new MissingRequestHeaderException("DeviceModelName or DeviceModelVersion", parameter);
         }
 
