@@ -1,3 +1,5 @@
 spring:
   application:
     name: zimra-fdms-mock-server-java
+server:
+  port: 3000
