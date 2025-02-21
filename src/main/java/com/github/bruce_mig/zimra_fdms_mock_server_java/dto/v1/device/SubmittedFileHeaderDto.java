@@ -18,7 +18,7 @@ public class SubmittedFileHeaderDto {
     private LocalDateTime fileUploadDate;
     private Integer deviceId;
     private Integer dayNo;
-    private LocalDateTime fiscalDateOpenedAt;
+    private LocalDateTime fiscalDayOpenedAt;
     private Integer fileSequence;
     private LocalDateTime fileProcessingDate;
     private FileProcessingStatus fileProcessingStatus;
