@@ -7,6 +7,7 @@ import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.ProductsSearchCriter
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Operator;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Order;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.products_stock.ProductsStockGetListDtoResponse;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.service.ProductsStockService;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +31,11 @@ public class ProductsStockController {
 
     public static final String OPERATION_ID = "operationId";
     private final OperationIDCache idCache;
+    private final ProductsStockService productsStockService;
 
-    public ProductsStockController(OperationIDCache idCache) {
+    public ProductsStockController(OperationIDCache idCache, ProductsStockService productsStockService) {
         this.idCache = idCache;
+        this.productsStockService = productsStockService;
     }
 
     /**
@@ -53,18 +56,18 @@ public class ProductsStockController {
                                                     @Valid @ModelAttribute ProductsSearchCriteria criteria,
                                                     BindingResult bindingResult){
 
+        ProductsStockGetListDtoResponse response = productsStockService.search(deviceID, deviceInfo, offset, limit, criteria);
+
         String operationID = idCache.getOperationID();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(OPERATION_ID,operationID);
 
-        // Check for validation errors on the DeviceSearchCriteria object
         if (bindingResult.hasErrors()) {
-            // Handle errors – for example, return a 400 Bad Request with error details
             return ResponseEntity.badRequest().headers(responseHeaders).body(bindingResult.getAllErrors());
         }
 
 
-        return ResponseEntity.ok().headers(responseHeaders).body(new ProductsStockGetListDtoResponse());
+        return ResponseEntity.ok().headers(responseHeaders).body(response);
 
     }
 
