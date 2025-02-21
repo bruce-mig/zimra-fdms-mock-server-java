@@ -1,16 +1,16 @@
 package com.github.bruce_mig.zimra_fdms_mock_server_java.dto;
 
+import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.DeviceSort;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Operator;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Order;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Sort;
 
 import java.time.LocalDateTime;
 
-public class SearchCriteria {
+public class DeviceSearchCriteria {
     private String operationID;
     private LocalDateTime fileUploadFrom;
     private LocalDateTime fileUploadTill;
-    private Sort sort;
+    private DeviceSort sort;
     private Order order;
     private Operator operator;
 
@@ -38,12 +38,12 @@ public class SearchCriteria {
         this.fileUploadTill = fileUploadTill;
     }
 
-    public Sort getSort() {
+    public DeviceSort getSort() {
         return sort;
     }
 
-    public void setSort(Sort sort) {
-        this.sort = sort;
+    public void setSort(DeviceSort deviceSort) {
+        this.sort = deviceSort;
     }
 
     public Order getOrder() {
