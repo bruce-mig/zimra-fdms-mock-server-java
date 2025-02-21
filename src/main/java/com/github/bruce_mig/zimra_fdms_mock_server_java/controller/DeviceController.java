@@ -224,7 +224,7 @@ public class DeviceController {
      * @param deviceID
      * @param deviceInfo
      * @param request
-     * @return
+     * @return SubmitFileResponse
      */
     @PostMapping("/{deviceID}/SubmitFile")
     public ResponseEntity<SubmitFileResponse> submitFile(@PathVariable Integer deviceID,
@@ -239,7 +239,6 @@ public class DeviceController {
                 .build();
 
         return ResponseEntity.ok().headers(responseHeaders).body(submitFileResponse);
-        // todo: create SubmitFileRequest class
     }
 
     /**
