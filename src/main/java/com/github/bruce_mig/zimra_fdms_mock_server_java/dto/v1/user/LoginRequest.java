@@ -15,7 +15,7 @@ public class LoginRequest {
 
     @NotBlank
     @Size(min = 1, max = 100)
-    private String username;
+    private String userName;
 
     @NotBlank
     @Size(min = 1, max = 500)
