@@ -3,7 +3,9 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.controller;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.annotations.DeviceInfoHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceInfo;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceSearchCriteria;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.OperationIdHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.*;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.service.DeviceService;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 /**
  * All methods except closeDay are synchronous.
  * closeDay method returns response about accepted request synchronously, however processing of information is done asynchronously.
- * Fiscal Device Gateway uses mutual TLS authentication (https://en.wikipedia.org/wiki/Mutual_authentication) to authenticate fiscal device using fiscal device certificate.
+ * Fiscal Device Gateway uses mutual TLS authentication (<a href="https://en.wikipedia.org/wiki/Mutual_authentication">...</a>) to authenticate fiscal device using fiscal device certificate.
  * Fiscal device certificate is validated against issuing certificate to allow or deny access to API endpoints.
  * After authentication provided fiscal device certificate is checked against issued certificate (see registerDevice and issueCertificate methods for fiscal device certificate issuing) to check if the fiscal device certificate was issued to calling device (by method parameter deviceId) and the fiscal device certificate was not revoked
  */
@@ -33,9 +35,11 @@ public class DeviceController {
 
     public static final String OPERATION_ID = "operationId";
     private final OperationIDCache idCache;
+    private final DeviceService deviceService;
 
-    public DeviceController(OperationIDCache idCache) {
+    public DeviceController(OperationIDCache idCache, DeviceService deviceService) {
         this.idCache = idCache;
+        this.deviceService = deviceService;
     }
 
     /**
@@ -50,17 +54,12 @@ public class DeviceController {
     @GetMapping("/{deviceID}/GetConfig")
     public ResponseEntity<GetConfigResponse> getConfig(@PathVariable Integer deviceID,
                                                        @DeviceInfoHeader DeviceInfo deviceInfo) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        log.debug("DeviceModelName: '{}' | DeviceModelVersion: '{}'", deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
+        GetConfigResponse configResponse = deviceService.getConfig(deviceID, deviceInfo);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        configResponse.setOperationID(opIdHeader.operationID());
 
-        GetConfigResponse configResponse = GetConfigResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(configResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(configResponse);
     }
 
     /**
@@ -72,17 +71,12 @@ public class DeviceController {
     @GetMapping("/{deviceID}/GetStatus")
     public ResponseEntity<GetStatusResponse> getStatus(@PathVariable Integer deviceID,
                                                        @DeviceInfoHeader DeviceInfo deviceInfo) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        log.debug("DeviceModelName: '{}' | DeviceModelVersion: '{}'", deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
+        GetStatusResponse statusResponse = deviceService.getStatus(deviceID, deviceInfo);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        statusResponse.setOperationID(opIdHeader.operationID());
 
-        GetStatusResponse statusResponse = GetStatusResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(statusResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(statusResponse);
     }
 
     /**
@@ -97,16 +91,12 @@ public class DeviceController {
     public ResponseEntity<OpenDayResponse> openDay(@PathVariable Integer deviceID,
                                                        @DeviceInfoHeader DeviceInfo deviceInfo,
                                                        @Valid @RequestBody OpenDayRequest request) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        log.debug("DeviceModelName: '{}' | DeviceModelVersion: '{}'", deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
+        OpenDayResponse openDayResponse = deviceService.openDay(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        openDayResponse.setOperationID(opIdHeader.operationID());
 
-        OpenDayResponse openDayResponse = OpenDayResponse.builder()
-                .operationID(operationID).build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(openDayResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(openDayResponse);
 
     }
 
@@ -128,15 +118,12 @@ public class DeviceController {
     public ResponseEntity<CloseDayResponse> closeDay(@PathVariable Integer deviceID,
                                                    @DeviceInfoHeader DeviceInfo deviceInfo,
                                                    @Valid @RequestBody CloseDayRequest request) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        CloseDayResponse closeDayResponse = CloseDayResponse.builder()
-                .operationID(operationID)
-                .build();
+        CloseDayResponse closeDayResponse = deviceService.closeDay(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        closeDayResponse.setOperationID(opIdHeader.operationID());
 
-        return ResponseEntity.accepted().headers(responseHeaders).body(closeDayResponse);
+        return ResponseEntity.accepted().headers(opIdHeader.headers()).body(closeDayResponse);
     }
 
     /**
@@ -154,15 +141,11 @@ public class DeviceController {
                                                      @DeviceInfoHeader DeviceInfo deviceInfo,
                                                      @Valid @RequestBody IssueCertificateRequest request) {
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        IssueCertificateResponse issueCertificateResponse = deviceService.issueCertificate(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        issueCertificateResponse.setOperationID(opIdHeader.operationID());
 
-        IssueCertificateResponse issueCertificateResponse = IssueCertificateResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(issueCertificateResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(issueCertificateResponse);
     }
 
     /**
@@ -184,16 +167,12 @@ public class DeviceController {
     public ResponseEntity<SubmitReceiptResponse> submitReceipt(@PathVariable Integer deviceID,
                                                                      @DeviceInfoHeader DeviceInfo deviceInfo,
                                                                      @Valid @RequestBody SubmitReceiptRequest request) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        SubmitReceiptResponse submitReceiptResponse = SubmitReceiptResponse.builder()
-                .operationID(operationID)
-                .build();
+        SubmitReceiptResponse submitReceiptResponse = deviceService.submitReceipt(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        submitReceiptResponse.setOperationID(opIdHeader.operationID());
 
-        return ResponseEntity.ok().headers(responseHeaders).body(submitReceiptResponse);
-
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(submitReceiptResponse);
 
     }
 
@@ -208,15 +187,11 @@ public class DeviceController {
     @PostMapping("/{deviceID}/Ping")
     public ResponseEntity<PingResponse> ping(@PathVariable Integer deviceID, @DeviceInfoHeader DeviceInfo deviceInfo) {
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        PingResponse pingResponse = deviceService.ping(deviceID, deviceInfo);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        pingResponse.setOperationID(opIdHeader.operationID());
 
-        PingResponse pingResponse = PingResponse.builder()
-                .operationID(operationID)
-                .build();
-
-        return ResponseEntity.ok().headers(responseHeaders).body(pingResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(pingResponse);
     }
 
     /**
@@ -230,15 +205,12 @@ public class DeviceController {
     public ResponseEntity<SubmitFileResponse> submitFile(@PathVariable Integer deviceID,
                                                                @DeviceInfoHeader DeviceInfo deviceInfo,
                                                                @Valid @RequestBody SubmitFileRequest request) {
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
 
-        SubmitFileResponse submitFileResponse = SubmitFileResponse.builder()
-                .operationID(operationID)
-                .build();
+        SubmitFileResponse submitFileResponse = deviceService.submitFile(deviceID, deviceInfo, request);
+        OperationIdHeader opIdHeader = createOpIdHeader();
+        submitFileResponse.setOperationID(opIdHeader.operationID());
 
-        return ResponseEntity.ok().headers(responseHeaders).body(submitFileResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(submitFileResponse);
     }
 
     /**
@@ -259,24 +231,19 @@ public class DeviceController {
           @Valid @ModelAttribute DeviceSearchCriteria criteria,
           BindingResult bindingResult) {
 
-        String operationID = idCache.getOperationID();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(OPERATION_ID,operationID);
+        SubmittedFileHeaderDtoListResponse listResponse = deviceService.getSubmittedFileList(deviceID, deviceInfo, offset, limit, criteria);
+        OperationIdHeader opIdHeader = createOpIdHeader();
 
         // Check for validation errors on the DeviceSearchCriteria object
         if (bindingResult.hasErrors()) {
-            // Handle errors – for example, return a 400 Bad Request with error details
-            return ResponseEntity.badRequest().headers(responseHeaders).body(bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().headers(opIdHeader.headers()).body(bindingResult.getAllErrors());
         }
-
-        SubmittedFileHeaderDtoListResponse listResponse = SubmittedFileHeaderDtoListResponse.builder()
-                .build();
 
         for (SubmittedFileHeaderDto row : listResponse.getRows()) {
-            row.setOperationId(operationID);
+            row.setOperationId(opIdHeader.operationID());
         }
 
-        return ResponseEntity.ok().headers(responseHeaders).body(listResponse);
+        return ResponseEntity.ok().headers(opIdHeader.headers()).body(listResponse);
     }
 
     /**  The @InitBinder method customizes the binding for DeviceSearchCriteria. */
@@ -317,6 +284,17 @@ public class DeviceController {
         }
     }
 
+    // Helper method to create headers with operationID
+    private OperationIdHeader createOpIdHeader() {
+        String operationID = idCache.getOperationID();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(OPERATION_ID,operationID);
 
+        return OperationIdHeader.builder()
+                .operationID(operationID)
+                .headers(headers)
+                .build();
+
+    }
 
 }
