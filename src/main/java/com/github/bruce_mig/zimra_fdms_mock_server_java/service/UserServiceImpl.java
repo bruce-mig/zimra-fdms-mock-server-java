@@ -7,11 +7,9 @@ import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.user.*;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.DeviceCertificateExpiredException;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.DeviceNotFoundException;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.UnprocessableContentException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class UserServiceImpl implements UserService{
 
     private final UserDAO userDao;
@@ -22,7 +20,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public GetUsersResponse getUsersList(Integer deviceID, DeviceInfo deviceInfo, Integer offset, Integer limit, UserSearchCriteria criteria) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -38,7 +35,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public SendSecurityCodeToTaxpayerResponse sendSecurityCodeToTaxpayer(Integer deviceID, DeviceInfo deviceInfo, SendSecurityCodeToTaxpayerRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -56,7 +52,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public CreateUserResponse createUser(Integer deviceID, DeviceInfo deviceInfo, CreateUserRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -72,7 +67,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public LoginResponse login(Integer deviceID, DeviceInfo deviceInfo, LoginRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -88,7 +82,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public SendSecurityCodeToUserEmailResponse sendSecurityCodeToUserEmail(Integer deviceID, String token, DeviceInfo deviceInfo, SendSecurityCodeToUserEmailRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -104,7 +97,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public SendSecurityCodeToUserPhoneResponse sendSecurityCodeToUserPhone(Integer deviceID, String token, DeviceInfo deviceInfo, SendSecurityCodeToUserPhoneRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -120,7 +112,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ConfirmUserResponse confirmUser(Integer deviceID, DeviceInfo deviceInfo, ConfirmUserRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -136,7 +127,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ChangePasswordResponse changePassword(Integer deviceID, String token, DeviceInfo deviceInfo, ChangePasswordRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -152,7 +142,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResetPasswordResponse resetPassword(Integer deviceID, DeviceInfo deviceInfo, ResetPasswordRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -168,7 +157,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ConfirmContactResponse confirmContact(Integer deviceID, String token, DeviceInfo deviceInfo, ConfirmContactRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -185,7 +173,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UpdateUserResponse update(Integer deviceID, String token, DeviceInfo deviceInfo, UpdateUserRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -201,7 +188,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ConfirmPasswordResponse confirmPasswordReset(Integer deviceID, DeviceInfo deviceInfo, ConfirmPasswordResetRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -215,7 +201,4 @@ public class UserServiceImpl implements UserService{
         return userDao.getConfirmPasswordResponse();
     }
 
-    private static void logDevice(Integer deviceID, DeviceInfo deviceInfo) {
-        log.info("[DeviceID: '{}' | DeviceModelName: '{}' | DeviceModelVersion: '{}']", deviceID, deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
-    }
 }

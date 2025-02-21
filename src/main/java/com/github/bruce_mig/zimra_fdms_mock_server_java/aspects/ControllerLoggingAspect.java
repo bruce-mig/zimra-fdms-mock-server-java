@@ -46,17 +46,20 @@ public class ControllerLoggingAspect {
         queryParams.append(" }");
 
         // ANSI escape codes for custom coloring (e.g. green text)
-        String defaultColor  = "\033[0;32m";
+        String greenColor  = "\033[0;32m";
         String darkOrange  = "\033[38;2;255;140;0m";
         String resetColor = "\033[0m";
 
         String logMessage = String.format(
-                defaultColor + "INFO [%s]: " + darkOrange + "Incoming request" + defaultColor + "\n" +
-                        "    env: \"%s\"\n" +
-                        "    method: \"%s\"\n" +
-                        "    url: \"%s%s\"\n" +
-                        "    query: %s" + resetColor,
-                java.time.LocalDateTime.now(),
+                darkOrange + "Incoming request\n" +
+                greenColor + "    env:" +
+                resetColor + " \"%s\"\n" +
+                greenColor + "    method:" +
+                resetColor + " \"%s\"\n" +
+                greenColor + "    url:"+
+                resetColor + " \"%s%s\"\n" +
+                greenColor + "    query:"+
+                resetColor + " %s" + resetColor,
                 environment,
                 httpMethod,
                 requestURI,

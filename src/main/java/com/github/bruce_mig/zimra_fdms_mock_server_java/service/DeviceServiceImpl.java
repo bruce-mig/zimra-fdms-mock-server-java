@@ -23,8 +23,6 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public GetConfigResponse getConfig(Integer deviceID, DeviceInfo deviceInfo) {
 
-        logDevice(deviceID, deviceInfo);
-
         switch (deviceID){
             case 900:
                 // Mock expiration of Certificate Device
@@ -41,7 +39,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public GetStatusResponse getStatus(Integer deviceID, DeviceInfo deviceInfo) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -57,7 +54,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public OpenDayResponse openDay(Integer deviceID, DeviceInfo deviceInfo, OpenDayRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -74,7 +70,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public CloseDayResponse closeDay(Integer deviceID, DeviceInfo deviceInfo, CloseDayRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -90,7 +85,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public IssueCertificateResponse issueCertificate(Integer deviceID, DeviceInfo deviceInfo, IssueCertificateRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -106,7 +100,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public SubmitReceiptResponse submitReceipt(Integer deviceID, DeviceInfo deviceInfo, SubmitReceiptRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -122,7 +115,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public PingResponse ping(Integer deviceID, DeviceInfo deviceInfo) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -138,7 +130,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public SubmitFileResponse submitFile(Integer deviceID, DeviceInfo deviceInfo, SubmitFileRequest request) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -156,7 +147,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public SubmittedFileHeaderDtoListResponse getSubmittedFileList(Integer deviceID, DeviceInfo deviceInfo, Integer offset, Integer limit, DeviceSearchCriteria criteria) {
-        logDevice(deviceID, deviceInfo);
 
         switch (deviceID){
             case 900:
@@ -170,7 +160,4 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceDao.getSubmittedFileHeaderDtoListResponse(deviceID);
     }
 
-    private static void logDevice(Integer deviceID, DeviceInfo deviceInfo) {
-        log.info("[DeviceID: '{}' | DeviceModelName: '{}' | DeviceModelVersion: '{}']", deviceID, deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
-    }
 }

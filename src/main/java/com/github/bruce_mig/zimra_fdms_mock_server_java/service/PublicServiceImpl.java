@@ -6,11 +6,9 @@ import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.public_dto.*;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.DeviceCertificateExpiredException;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.ThumbprintCertificateNotFoundException;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.UnprocessableContentException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class PublicServiceImpl implements PublicService {
 
     private final PublicDAO publicDao;
@@ -21,7 +19,6 @@ public class PublicServiceImpl implements PublicService {
 
     @Override
     public RegisterDeviceResponse registerDevice(Integer deviceID, DeviceInfo deviceInfo, RegisterDeviceRequest registerDeviceRequest) {
-        log.info("[DeviceID: '{}' | DeviceModelName: '{}' | DeviceModelVersion: '{}']", deviceID, deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
 
         switch (deviceID){
             case 900:
@@ -51,7 +48,6 @@ public class PublicServiceImpl implements PublicService {
 
     @Override
     public VerifyTaxpayerInformationResponse verifyTaxpayerInformation(Integer deviceID, VerifyTaxpayerInformationRequest request) {
-        log.info("[DeviceID: '{}'", deviceID);
 
         if (deviceID == 900) {
             throw new UnprocessableContentException("Operation failed because of provided data or invalid object state in Fiscal backend");

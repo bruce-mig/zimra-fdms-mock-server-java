@@ -7,11 +7,9 @@ import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.products_stock.Pr
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.DeviceCertificateExpiredException;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.DeviceNotFoundException;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions.UnprocessableContentException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class ProductsStockServiceImpl implements ProductsStockService {
 
     private final ProductsStockDAO productsStockDao;
@@ -22,8 +20,6 @@ public class ProductsStockServiceImpl implements ProductsStockService {
 
     @Override
     public ProductsStockGetListDtoResponse search(Integer deviceID, DeviceInfo deviceInfo, Integer offset, Integer limit, ProductsSearchCriteria criteria) {
-
-        log.info("[DeviceID: '{}' | DeviceModelName: '{}' | DeviceModelVersion: '{}']", deviceID, deviceInfo.deviceModelName(), deviceInfo.deviceModelVersion());
 
         switch (deviceID){
             case 900:
