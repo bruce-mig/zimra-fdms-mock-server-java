@@ -2,16 +2,13 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.controller;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.annotations.DeviceInfoHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceInfo;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceSearchCriteria;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.UserSearchCriteria;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.DeviceSort;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Operator;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.Order;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.user.*;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
