@@ -92,6 +92,20 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(errorDetails, headers, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ThumbprintCertificateNotFoundException.class)
+    public final ResponseEntity<ProblemDetails> handleThumbprintCertificateNotFoundException(Exception ex, WebRequest request) {
+
+        ProblemDetails errorDetails = ProblemDetails.builder()
+                .type("https://httpstatuses.io/404")
+                .title("Not Found")
+                .status(404)
+                .detail("Certificate requested by thumbprint not found")
+                .build();
+
+        HttpHeaders headers = createCustomHeaders();
+        return new ResponseEntity<>(errorDetails, headers, HttpStatus.NOT_FOUND);
+    }
+
     // MethodArgumentNotValidException => for request body validation
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
