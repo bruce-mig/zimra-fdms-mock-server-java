@@ -23,7 +23,7 @@ public class DevicesGetSubmittedFileListRequest {
     private Integer limit;
 
     private Operator operator;
-    private Sort sort;
+    private DeviceSort sort;
 
     @Size(max = 60)
     private String operatorID;
