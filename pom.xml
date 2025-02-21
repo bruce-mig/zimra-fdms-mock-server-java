@@ -18,7 +18,11 @@
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Bruce Migeri</name>
+			<email>bmigeri@gmail.com</email>
+			<url>https://github.com/bruce-mig</url>
+		</developer>
 	</developers>
 	<scm>
 		<connection/>
