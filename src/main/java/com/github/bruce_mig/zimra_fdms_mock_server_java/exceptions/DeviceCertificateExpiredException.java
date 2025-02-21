@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * Report Not Found Exception
+ * Device certificate expired Exception
  * @author Bruce Migeri
  */
-@ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class ReportNotFoundException extends RuntimeException {
-    public ReportNotFoundException(String message) {
+@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+public class DeviceCertificateExpiredException extends RuntimeException {
+    public DeviceCertificateExpiredException(String message) {
         super(message);
     }
 }
