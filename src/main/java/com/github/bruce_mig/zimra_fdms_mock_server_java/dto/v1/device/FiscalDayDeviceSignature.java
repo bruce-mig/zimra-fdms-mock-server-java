@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 public class FiscalDayDeviceSignature {
     @NotNull
     @Size(max = 32)
-    private byte[] hash;
+    private String hash;
 
     @NotNull
     @Size(max = 256)
-    private byte[] signature;
+    private String signature;
 }
