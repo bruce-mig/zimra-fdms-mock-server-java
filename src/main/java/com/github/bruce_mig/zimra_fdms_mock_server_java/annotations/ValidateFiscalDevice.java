@@ -6,12 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Custom annotation to capture and bind 'DeviceModelName' and 'DeviceModelVersion' query parameters
- * The required attribute defaults to false
+ * Custom Annotation to validate deviceID with the ZIMRA Fiscal Backend
  * @author Bruce Migeri
  */
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DeviceInfoHeader {
-    boolean required() default false;
+@Target(ElementType.METHOD)
+public @interface ValidateFiscalDevice {
 }

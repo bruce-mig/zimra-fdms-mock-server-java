@@ -85,7 +85,7 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
                 .type("https://httpstatuses.io/404")
                 .title("Not Found")
                 .status(404)
-                .detail("Not existing device with provided device id")
+                .detail("No existing device with provided device id")
                 .build();
 
         HttpHeaders headers = createCustomHeaders();

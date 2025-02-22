@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
- * A mock server for the Zimra FDMS API
+ * A mock server for the Zimra FDMS APIs
  * @author Bruce Migeri
  */
 @SpringBootApplication

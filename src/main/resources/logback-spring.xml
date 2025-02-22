@@ -2,8 +2,7 @@
     <!-- Custom appender for controller logs -->
     <appender name="CONTROLLER" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!-- The %highlight conversion word helps colorize the output.
-                 You can further customize the pattern if needed. -->
+            <!-- The %highlight conversion word helps colorize the output.-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight([%level]) : %msg%n</pattern>
         </encoder>
     </appender>

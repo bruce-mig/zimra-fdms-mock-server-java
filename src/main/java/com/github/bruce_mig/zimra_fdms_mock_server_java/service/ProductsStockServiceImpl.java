@@ -1,5 +1,6 @@
 package com.github.bruce_mig.zimra_fdms_mock_server_java.service;
 
+import com.github.bruce_mig.zimra_fdms_mock_server_java.annotations.ValidateFiscalDevice;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dao.ProductsStockDAO;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceInfo;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.ProductsSearchCriteria;
@@ -19,16 +20,10 @@ public class ProductsStockServiceImpl implements ProductsStockService {
     }
 
     @Override
+    @ValidateFiscalDevice
     public ProductsStockGetListDtoResponse search(Integer deviceID, DeviceInfo deviceInfo, Integer offset, Integer limit, ProductsSearchCriteria criteria) {
 
-        switch (deviceID){
-            case 900:
-                // Mock expiration of Certificate Device
-                throw new DeviceCertificateExpiredException("Device certificate expired");
-            case 901:
-                // Mock 422
-                throw new UnprocessableContentException("Operation failed because of provided data or invalid object state in Fiscal backend");
-            case 902:
+        if(deviceID == 902){
                 throw new DeviceNotFoundException("Operation failed because no device were found with provided device id");
         }
 
