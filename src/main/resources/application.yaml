@@ -1,5 +1,7 @@
 spring:
   application:
     name: zimra-fdms-mock-server-java
+  profiles:
+    active: dev
 server:
   port: 3000
