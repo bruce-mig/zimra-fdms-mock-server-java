@@ -1,6 +1,7 @@
 package com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class CloseDayRequest {
     @NotNull
     private Integer fiscalDayNo;
 
-    @NotBlank
+    @NotEmpty
     private List<FiscalDayCounter> fiscalDayCounters;
 
     @NotNull
