@@ -23,7 +23,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Running Unit Tests
+      - name: Running Tests
         run: |
           ./mvnw clean compile
   tests:
