@@ -41,7 +41,7 @@ public class PublicController {
      */
     @PostMapping("{deviceID}/RegisterDevice")
     public ResponseEntity<?> registerDevice(@PathVariable Integer deviceID,
-                                            @DeviceInfoHeader DeviceInfo deviceInfo,
+                                            @DeviceInfoHeader(required = true) DeviceInfo deviceInfo,
                                             @Valid @RequestBody RegisterDeviceRequest registerDeviceRequest) {
 
         OperationIdHeader opIdHeader = createOpIdHeader();
