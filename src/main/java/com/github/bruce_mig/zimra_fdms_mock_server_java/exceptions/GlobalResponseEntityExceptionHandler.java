@@ -42,7 +42,8 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
                 .type("https://httpstatuses.io/500")
                 .title("Server encountered temporary issues")
                 .status(500)
-                .detail(request.getDescription(false))
+                .detail(ex.getMessage())
+                .instance(request.getDescription(false))
                 .build();
 
         HttpHeaders headers = createCustomHeaders();
