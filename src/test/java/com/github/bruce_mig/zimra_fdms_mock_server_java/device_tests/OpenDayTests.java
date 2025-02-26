@@ -1,7 +1,7 @@
 package com.github.bruce_mig.zimra_fdms_mock_server_java.device_tests;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.controller.DeviceController;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.util.op_id.OperationIDCache;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import nl.altindag.log.LogCaptor;
