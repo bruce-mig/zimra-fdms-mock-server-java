@@ -6,27 +6,22 @@ public class OperationIDGenerator {
 
     /** OperationID Generator Function */
     public static String generateOperationID() {
-        final String prefix ="0HMPH";
+        // Prefix: always "0H"
+        final String prefix = "0H";
 
-        // Generate a random 8-character base-36 string.
-        long maxRandomValue = (long) Math.pow(36, 8);
+        // Generate a random 11-character base-36 (alphanumeric) string.
+        // Math.pow(36, 11) gives the range for an 11-character base-36 number.
+        long maxRandomValue = (long) Math.pow(36, 11);
         long randomValue = ThreadLocalRandom.current().nextLong(maxRandomValue);
         String randomPart = Long.toString(randomValue, 36).toUpperCase();
+        // Pad with zeros to ensure exactly 11 characters.
+        randomPart = String.format("%11s", randomPart).replace(' ', '0');
 
-        // Pad with zeros to ensure exactly 8 characters.
-        randomPart = String.format("%8s", randomPart).replace(' ', '0');
+        // Generate the part after the colon: 7 zeros followed by a random digit.
+        int randomDigit = ThreadLocalRandom.current().nextInt(10);
+        String afterColon = "0000000" + randomDigit;
 
-        // Convert the current timestamp to a base-36 string.
-        String timestamp = Long.toString(System.currentTimeMillis(), 36).toUpperCase();
-
-        // Concatenate the prefix, random part, and timestamp.
-        String id = prefix + randomPart + timestamp;
-
-        // Truncate to 60 characters if necessary.
-        if (id.length() > 60) {
-            id = id.substring(0, 60);
-        }
-
-        return id;
+        // Construct the final ID in the format: 0H + 11-character randomPart + ":" + afterColon
+        return prefix + randomPart + ":" + afterColon;
     }
 }
