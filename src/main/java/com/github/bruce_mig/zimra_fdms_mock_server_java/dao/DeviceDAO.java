@@ -3,7 +3,9 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.dao;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.*;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -119,12 +121,12 @@ public class DeviceDAO {
         List<SubmittedFileHeaderDto> rows = List.of(
                 SubmittedFileHeaderDto.builder()
                         .fileName("file")
-                        .fileUploadDate(LocalDateTime.parse("2025-02-21T16:19:08.312Z"))
+                        .fileUploadDate(LocalDateTime.ofInstant(Instant.parse("2025-02-26T10:14:34.481Z"), ZoneOffset.UTC))
                         .deviceId(deviceID)
                         .dayNo(4)
-                        .fiscalDayOpenedAt(LocalDateTime.parse("2025-02-21T16:19:08.312Z"))
+                        .fiscalDayOpenedAt(LocalDateTime.ofInstant(Instant.parse("2025-02-26T10:14:34.481Z"), ZoneOffset.UTC))
                         .fileSequence(3)
-                        .fileProcessingDate(LocalDateTime.parse("2025-02-21T16:19:08.312Z"))
+                        .fileProcessingDate(LocalDateTime.ofInstant(Instant.parse("2025-02-26T10:14:34.481Z"), ZoneOffset.UTC))
                         .fileProcessingStatus(FileProcessingStatus.InProgress)
                         .fileProcessingError(FileProcessingError.IncorrectFileFormat)
                         .hasFooter(true)

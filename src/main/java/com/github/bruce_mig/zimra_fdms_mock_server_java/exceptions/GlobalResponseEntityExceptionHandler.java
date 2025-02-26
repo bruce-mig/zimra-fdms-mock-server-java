@@ -2,7 +2,7 @@ package com.github.bruce_mig.zimra_fdms_mock_server_java.exceptions;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.ProblemDetails;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.ValidationProblemDetails;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.util.op_id.OperationIDCache;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +42,8 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
                 .type("https://httpstatuses.io/500")
                 .title("Server encountered temporary issues")
                 .status(500)
-                .detail(request.getDescription(false))
+                .detail(ex.getMessage())
+                .instance(request.getDescription(false))
                 .build();
 
         HttpHeaders headers = createCustomHeaders();

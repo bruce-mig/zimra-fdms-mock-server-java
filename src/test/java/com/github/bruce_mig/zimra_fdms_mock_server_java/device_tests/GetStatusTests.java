@@ -1,16 +1,13 @@
 package com.github.bruce_mig.zimra_fdms_mock_server_java.device_tests;
 
 import com.github.bruce_mig.zimra_fdms_mock_server_java.controller.DeviceController;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.util.op_id.OperationIDCache;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

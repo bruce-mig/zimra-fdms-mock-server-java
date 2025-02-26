@@ -6,7 +6,7 @@ import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.DeviceSearchCriteria
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.OperationIdHeader;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.dto.v1.device.*;
 import com.github.bruce_mig.zimra_fdms_mock_server_java.service.DeviceService;
-import com.github.bruce_mig.zimra_fdms_mock_server_java.util.OperationIDCache;
+import com.github.bruce_mig.zimra_fdms_mock_server_java.util.op_id.OperationIDCache;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
