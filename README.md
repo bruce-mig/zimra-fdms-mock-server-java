@@ -53,7 +53,7 @@ The Swagger UI is at `http://localhost:3000/swagger-ui/index.html`
 To run the ZIMRA FDMS Mock Server using Docker, run the following command:
 
 ```bash
-docker run -p 3000:3000 bmigeri/zimra-mock-server-java:latest
+docker run -p 3000:3000 bmigeri/zimra-fdms-mock-server-java:latest
 ```
 
 The server will be accessible at `http://localhost:3000`.
